@@ -11,7 +11,7 @@ function BookList() {
         <ul>
           {books.map((book, idx) => {
             return (
-              <li key={idx}>
+              <li key={book.id}>
                 <div className="book-info">
                   {`${++idx}. ${book.title} by `}
                   {<strong>{book.author}</strong>}
