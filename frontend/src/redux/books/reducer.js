@@ -12,6 +12,13 @@ const booksReducer = (state = initialState, action) => {
         return book.id !== action.payload;
       });
     }
+    case actionTypes.TOGGLE_FAVORITE: {
+      return state.map((book) => {
+        return book.id === action.payload
+          ? { ...book, isFavorite: !book.isFavorite }
+          : book;
+      });
+    }
     default:
       return state;
   }
