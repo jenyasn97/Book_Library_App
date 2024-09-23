@@ -16,10 +16,13 @@ function BookForm() {
     if (title && author) {
       dispatch(
         add_book(
-          createBookWithId({
-            title: title,
-            author: author,
-          })
+          createBookWithId(
+            {
+              title: title,
+              author: author,
+            },
+            "manual"
+          )
         )
       );
       setTitle("");
@@ -30,7 +33,10 @@ function BookForm() {
   function handleAddRandomBook() {
     dispatch(
       add_book(
-        createBookWithId({ ...booksData[randomNumber(0, booksData.length)] })
+        createBookWithId(
+          { ...booksData[randomNumber(0, booksData.length)] },
+          "random"
+        )
       )
     );
   }
@@ -39,7 +45,7 @@ function BookForm() {
     try {
       const result = await axios("http://localhost:4000/random-book");
       if (result.data && result.data.title && result.data.author) {
-        dispatch(add_book(createBookWithId(result.data)));
+        dispatch(add_book(createBookWithId(result.data, "API")));
       }
     } catch (e) {
       console.log("Error: ", e.message);
