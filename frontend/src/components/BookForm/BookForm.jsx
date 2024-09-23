@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addBook } from "../../redux/books/actionCreators";
+import { add_book } from "../../redux/slices/booksSlice";
 import { randomNumber, createBookWithId } from "../../utils/index";
 import booksData from "../../data/books.json";
 import "./BookForm.css";
@@ -14,7 +14,7 @@ function BookForm() {
     e.preventDefault();
     if (title && author) {
       dispatch(
-        addBook(
+        add_book(
           createBookWithId({
             title: title,
             author: author,
@@ -28,7 +28,7 @@ function BookForm() {
 
   function handleAddRandomBook() {
     dispatch(
-      addBook(
+      add_book(
         createBookWithId({ ...booksData[randomNumber(0, booksData.length)] })
       )
     );

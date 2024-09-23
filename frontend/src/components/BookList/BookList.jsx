@@ -7,11 +7,14 @@ import {
   selectAuthorFilter,
   selectOnlyFavoriteFilter,
 } from "../../redux/slices/filterSlice";
-
-import { deleteBook, toggleFavorite } from "../../redux/books/actionCreators";
+import {
+  delete_book,
+  toggle_favorite,
+  selectBook,
+} from "../../redux/slices/booksSlice";
 
 function BookList() {
-  const books = useSelector((state) => state.books);
+  const books = useSelector(selectBook);
   const titleFilter = useSelector(selectTitleFilter);
   const authorFilter = useSelector(selectAuthorFilter);
   const onlyFavoriteFilter = useSelector(selectOnlyFavoriteFilter);
@@ -19,11 +22,11 @@ function BookList() {
   const dispatch = useDispatch();
 
   const handleDeleteBook = (id) => {
-    dispatch(deleteBook(id));
+    dispatch(delete_book(id));
   };
 
   const handleToggleFavorite = (id) => {
-    dispatch(toggleFavorite(id));
+    dispatch(toggle_favorite(id));
   };
 
   const filtredBooks = books.filter((book) => {
@@ -40,8 +43,6 @@ function BookList() {
   });
 
   const highlightMatch = (text, filter) => {
-    console.log(text, filter);
-
     if (!filter) return text;
 
     const regex = new RegExp(`(${filter})`, "gi");
