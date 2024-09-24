@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { add_book, thunkFunction } from "../../redux/slices/booksSlice";
+import { add_book, fetchbook } from "../../redux/slices/booksSlice";
 import { randomNumber, createBookWithId } from "../../utils/index";
 import booksData from "../../data/books.json";
 import "./BookForm.css";
@@ -41,7 +41,7 @@ function BookForm() {
   }
 
   async function handleAddRandomBookViaApi() {
-    dispatch(thunkFunction);
+    dispatch(fetchbook());
   }
 
   return (
