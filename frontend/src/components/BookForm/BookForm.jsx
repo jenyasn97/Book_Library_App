@@ -44,7 +44,7 @@ function BookForm() {
   }
 
   async function handleAddRandomBookViaApi() {
-    dispatch(fetchbook());
+    dispatch(fetchbook("http://localhost:4000/random-book"));
   }
 
   return (
