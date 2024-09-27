@@ -3,7 +3,10 @@ import { createBookWithId } from "../../utils";
 import axios from "axios";
 import { setError } from "./errorSlice";
 
-const initialState = [];
+const initialState = {
+  books: [],
+  isLoadingViaAPI: false,
+};
 export const fetchbook = createAsyncThunk(
   "books/fetchBook",
   async (url, thunkAPI) => {
@@ -12,7 +15,7 @@ export const fetchbook = createAsyncThunk(
       return result.data;
     } catch (error) {
       thunkAPI.dispatch(setError(error.message));
-      throw error;
+      return thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -22,16 +25,18 @@ const bookSlise = createSlice({
   initialState: initialState,
   reducers: {
     add_book: (state, action) => {
-      //state.push(action.payload)
-      return [...state, action.payload];
+      state.books.push(action.payload);
     },
     delete_book: (state, action) => {
-      return state.filter((book) => {
-        return book.id !== action.payload;
-      });
+      return {
+        ...state,
+        books: state.books.filter((book) => {
+          return book.id !== action.payload;
+        }),
+      };
     },
     toggle_favorite: (state, action) => {
-      state.forEach((book) => {
+      state.books.forEach((book) => {
         if (book.id === action.payload) {
           book.isFavorite = !book.isFavorite;
         }
@@ -44,15 +49,24 @@ const bookSlise = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchbook.pending, (state) => {
+      state.isLoadingViaAPI = true;
+    });
     builder.addCase(fetchbook.fulfilled, (state, action) => {
-      if (action.payload.title && action.payload.author) {
-        state.push(createBookWithId(action.payload, "API"));
+      state.isLoadingViaAPI = false;
+
+      if (action?.payload?.title && action?.payload?.author) {
+        state.books.push(createBookWithId(action.payload, "API"));
       }
+    });
+    builder.addCase(fetchbook.rejected, (state) => {
+      state.isLoadingViaAPI = false;
     });
   },
 });
 
-export const selectBook = (state) => state.books;
+export const selectBook = (state) => state.books.books;
+export const selectLoading = (state) => state.books.isLoadingViaAPI;
 export const { add_book, delete_book, toggle_favorite } = bookSlise.actions;
 
 // export const thunkFunction = async (dispatch, getState) => {
